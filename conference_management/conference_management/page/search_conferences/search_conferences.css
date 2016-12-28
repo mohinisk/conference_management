@@ -1,0 +1,7 @@
+.borderless td, .borderless th {
+    border: 1px;
+	padding: 5px;
+}
+.facility_list{
+	list-style: none;
+}

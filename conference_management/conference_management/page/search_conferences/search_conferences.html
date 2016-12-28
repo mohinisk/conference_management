@@ -1,0 +1,53 @@
+<div class="search-engine" style="min-height: 200px; padding: 15px;">
+	<form>
+		<table class="borderless" width="50%">
+			<tr>
+				<td>Date</td>
+				<td><input type="text" autocomplete="off" class="date1" id="date1"></td>
+			</tr>
+			<tr>
+				<td>From</td>
+				<td><input type="text" autocomplete="off" class="time1" id="time1"></td>
+				<td>to</td>
+				<td><input type="text" autocomplete="off" class="time1" id="time2"></td>
+			</tr>
+			<tr>
+				<td>No. of attendees</td>
+				<td><input type="text" class="time1" id="attendees"></td>
+			</tr>
+			<tr>
+				<td valign="top">Facilities</td>
+				<td>
+					<ul class="facility_list">
+					</ul>
+				</td>
+			</tr>
+			<tr>
+				<td align="right"><input type="checkbox" class="time1" id="other_time"></td>
+				<td colspan="3">Are you okay with the other available slots of the day?</br>
+				<i>(if non-avalability in current slot)</i>
+				</td>
+			</tr>
+			<tr>
+				<td></td>
+				<td align="right"><button type = "button" class = "btn btn-default" id="btn-search">Search</button></td>
+				
+				<td colspan="3"><button type = "button" class = "btn btn-default">Cancel</button></br>				
+				</td>
+			</tr>
+			<tr>
+				<td colspan="4">
+					<table class="available_list">
+						<tr>
+							<th>Conference</th>
+							<th>Matching Slot</th>
+							<th>Require Permission</th>
+							<th>Booking</th>
+							<th>Calender View</th>
+						</tr>
+					</table>					
+				</td>
+			</tr>
+		</table>
+	</form>
+</div>

@@ -1,0 +1,22 @@
+{
+ "content": null, 
+ "creation": "2016-12-06 22:54:58.563975", 
+ "docstatus": 0, 
+ "doctype": "Page", 
+ "idx": 0, 
+ "modified": "2016-12-06 22:54:58.563975", 
+ "modified_by": "Administrator", 
+ "module": "Conference Management", 
+ "name": "search-conferences", 
+ "owner": "Administrator", 
+ "page_name": "Search Conferences", 
+ "roles": [
+  {
+   "role": "All"
+  }
+ ], 
+ "script": null, 
+ "standard": "Yes", 
+ "style": null, 
+ "title": "Search a Conference"
+}
