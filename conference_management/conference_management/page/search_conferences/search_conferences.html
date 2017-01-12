@@ -1,19 +1,20 @@
-<div class="search-engine" style="min-height: 200px; padding: 15px;">
-	<form>
-		<table class="borderless" width="50%">
+<!-- <div class="container">
+  <div class="row">
+    <div class=" search-engine col-sm-10">
+    	<form>
+		<table class="borderless">
 			<tr>
 				<td>Date</td>
-				<td><input type="text" autocomplete="off" class="date1" id="date1"></td>
-			</tr>
-			<tr>
-				<td>From</td>
-				<td><input type="text" autocomplete="off" class="time1" id="time1"></td>
-				<td>to</td>
-				<td><input type="text" autocomplete="off" class="time1" id="time2"></td>
+				<td id="date1"> </td>
+				<td>From Time</td>
+				<td id="time1"></td>
+				<td>To Time</td>
+				<td id="time2"></td>
+				
 			</tr>
 			<tr>
 				<td>No. of attendees</td>
-				<td><input type="text" class="time1" id="attendees"></td>
+				<td id="attendees"</td>
 			</tr>
 			<tr>
 				<td valign="top">Facilities</td>
@@ -21,33 +22,88 @@
 					<ul class="facility_list">
 					</ul>
 				</td>
-			</tr>
-			<tr>
 				<td align="right"><input type="checkbox" class="time1" id="other_time"></td>
 				<td colspan="3">Are you okay with the other available slots of the day?</br>
 				<i>(if non-avalability in current slot)</i>
 				</td>
-			</tr>
 			<tr>
 				<td></td>
-				<td align="right"><button type = "button" class = "btn btn-default" id="btn-search">Search</button></td>
+				<td align="Right" colspan="2"><button type = "button" class = "btn btn-default" id="btn-search">Search</button></td>
 				
-				<td colspan="3"><button type = "button" class = "btn btn-default">Cancel</button></br>				
+				<td align="left"><button type = "button" class = "btn btn-default">Cancel</button></br>				
 				</td>
 			</tr>
 			<tr>
-				<td colspan="4">
-					<table class="available_list">
-						<tr>
-							<th>Conference</th>
-							<th>Matching Slot</th>
-							<th>Require Permission</th>
-							<th>Booking</th>
-							<th>Calender View</th>
-						</tr>
-					</table>					
+				<td colspan="10">
+					<table class="search_conference" id="available_result" style="border: 1px solid black;" size="400" width="100%">
+						<thead>
+							<tr>
+								<th>Conference</th>
+								<th>Matching Slot</th>
+								<th>Require Permission</th>
+								<th>Booking</th>
+								<th>Calender View</th>
+							</tr>
+						</thead>
+						<tbody id="tbody">
+						</tbody>
+					</table>
 				</td>
 			</tr>
+	</form>  
+   </div>
+    
+    <div class="col-sm-2">  
+    </div>
+  </div>
+</div>
+-->
+
+<div class="row">
+	<div class="col-xs-1"></div>
+	<div class="col-xs-4" id="date">Date</div>
+	<div class="col-xs-3" id="from_time">From Time</div>
+	<div class="col-xs-3" id="to_time">To Time</div>
+	<div class="col-xs-1"></div>
+</div>
+
+<div class="row">
+	<div class="col-xs-1"></div>
+	<div class="col-xs-3" id="attendees">Attendees</div>
+</div>
+
+<div class="row">
+	<div class="col-xs-1"></div>
+	<div class="col-xs-2">Facilities</div>
+	<div class="col-xs-5" id="facility_list"> </div>
+	<div class="col-xs-4"></div>
+		<div class="checkbox">
+        <label><input type="checkbox" value="">Are You Ok With Other Available Slots For The Date?</label>
+    	</div>
+</div>
+
+<div class = "row">
+	<div class ="col-xs-5"></div>
+	<button type="button" id="btn-search" class="btn btn-default">Search</button>&nbsp;&nbsp;&nbsp;
+	<button type="button" class="btn btn-default">Cancel</button>
+</div>
+
+<div class = "row">
+	<div class="col-xs-1"></div>
+	<div class ="col-xs-10">
+		<table class="table table-hover" id="available_result" style="border: 1px solid black;" size="400" width="100%" cellspacing="10">
+			<thead>
+				<tr>
+					<th>Conference</th>
+					<th>Matching Slot</th>
+					<th>Require Permission</th>
+					<th>Booking</th>
+					<th>Calendar View</th>
+				</tr>
+			</thead>
+			<tbody id="tbody">
+			</tbody>
 		</table>
-	</form>
+	</div>
+<div class="col-xs-1"></div>
 </div>

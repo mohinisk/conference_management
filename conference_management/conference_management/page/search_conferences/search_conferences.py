@@ -35,5 +35,34 @@ def search(data, facilities):
 
 @frappe.whitelist()
 def facility_list():
+        #
         facility_list = frappe.client.get_list('Facility')
+        #print "******************************",facility_list
 	return facility_list
+
+# For cheking conference on selected date and time
+@frappe.whitelist()
+def get_conference(date,from_time,to_time):
+        #print "\n\n\n******************************************************call\n\n\n\n\n"
+        cdoc=frappe.get_all("Conference booking",filters={'date':date,'from_time':from_time,'to_time':to_time})
+        l=len(cdoc)
+        ##print "*********************** No of records",l
+        conferences=search_conference()
+        cl=len(conferences)
+        conferences_result={}
+        for i in range(0,cl):
+                d1={conferences[i]['name']:0}
+                conferences_result.update(d1)
+        #print "*****************All conferences**************",conferences_result
+        for i in range(0,l):
+                cb_doc=frappe.get_doc("Conference booking",cdoc[i]['name'])
+                #print "* Busy Conference Room*",cb_doc.conference
+                if cb_doc.conference in conferences_result:
+                        conferences_result[cb_doc.conference]=1
+        #print "***************** conferences_result**************",conferences_result
+        return conferences_result
+@frappe.whitelist()
+def search_conference():
+        conf=frappe.get_all("Conference")
+        return conf
+

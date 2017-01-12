@@ -8,3 +8,9 @@ from frappe.model.document import Document
 
 class Conferencebooking(Document):
 	pass
+	
+@frappe.whitelist()
+def get_location(email):
+	user=frappe.get_doc("User",email)
+	return user.location
+	
