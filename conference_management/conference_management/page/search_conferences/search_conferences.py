@@ -36,7 +36,7 @@ def search(data, facilities):
 @frappe.whitelist()
 def facility_list():
         #
-        facility_list = frappe.client.get_list('Facility')
+        facility_list = frappe.client.get_list('Facilities')
         #print "******************************",facility_list
 	return facility_list
 
