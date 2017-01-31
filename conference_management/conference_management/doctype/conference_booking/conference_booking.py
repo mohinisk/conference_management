@@ -10,6 +10,54 @@ from conference_management.api import send_invitation_emails
 class Conferencebooking(Document):
 	
 	def validate(self):
+		
+
+
+		if not self.attendees:
+			print "========",self.attendees
+		else:
+		# For creating Event and Sharing Event
+			Attendees=self.attendees
+			Attendees=Attendees+str("#")
+			temp_email=""
+			# New Event 
+			Event_doc=frappe.new_doc("Event")
+			Event_doc.subject=self.name
+			start=str(self.date+" "+self.from_time)
+			end=str(self.date+" "+self.to_time)
+			Event_doc.starts_on=frappe.utils.data.parse_val(start)
+			Event_doc.ends_on=frappe.utils.data.parse_val(end)
+			Event_doc.event_type="Private"
+			Event_doc.flags.ignore_mandatory = True
+			Event_doc.save()
+			print "Name",Event_doc.name
+			Event_name=Event_doc.name
+
+			for  i in range(0,len(Attendees)):
+				if Attendees[i]=="," or Attendees[i]=="#":
+					Attendee=temp_email;
+					print "\nUser=",Attendee
+					#New Doc_share 
+					Docshare_doc=frappe.new_doc("DocShare")
+					#print len(Attendee)
+					#for j in range(0,len(Attendee)):
+					#	print"",Attendee[j],#
+					UDoc=frappe.get_doc("User",Attendee)
+					print UDoc.name
+					Docshare_doc.user=str(Attendee)
+					print "User+---",Attendee
+					Docshare_doc.share_doctype="Event"
+					Docshare_doc.share_name=Event_name
+					Docshare_doc.read=1
+					Docshare_doc.save()
+					Event_doc.send_reminder=1
+					Event_doc.save()
+
+					temp_email=""
+					print "______________________________"	
+				else:
+					temp_email=temp_email+str(Attendees[i])
+
 		if self.send_invite==1:
 			Venue="From Time :"+self.from_time+" "+"To Time :"+self.to_time+"\n"+"Date :"+self.date
 			Attendees=self.attendees
@@ -25,6 +73,31 @@ class Conferencebooking(Document):
 				else:
 					temp_email=temp_email+str(Attendees[i])
 
+	    # For Helpdesk pantry_service ticket 
+		if self.pantry_service==1:
+			pantry_doc=frappe.new_doc("Ticket")
+			pantry_doc.user=self.email
+			pantry_doc.region=self.area
+			pantry_doc.city=self.city
+			pantry_doc.facility=self.facility
+			pantry_doc.floor=self.building
+			pantry_doc.bay=self.bay
+			pantry_doc.function="Pantry Services"
+			pantry_doc.service="Pantry"
+			pantry_doc.service_type="Pantry-Pantry-Pantry Services"
+			pantry_doc.flags.ignore_mandatory = True
+			pantry_doc.save()
+
+		if self.date < frappe.utils.data.nowdate():
+			frappe.msgprint("You cannot select past date")
+
+		if self.from_time > self.to_time:
+			frappe.msgprint("From Time Must Be Smaller Than To Time")
+
+		if self.to_time < self.from_time:
+			frappe.msgprint("To Time Must Be Greater Than From Time")
+
+
 
 		
 @frappe.whitelist()
@@ -36,3 +109,9 @@ def get_location(email):
 def send_invitation(Attendee,Agenda,Venue):
 	send_invitation_emails(Attendee,Agenda,Venue)
 	print "_________________send_invitation____________"
+
+@frappe.whitelist()
+def check_conference_perm(name):
+	conf_doc=frappe.get_doc("Conference",name)
+	print "\n\n\n\nConf",conf_doc.require_permission
+	return conf_doc.require_permission

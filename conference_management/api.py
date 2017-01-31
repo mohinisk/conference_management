@@ -11,11 +11,8 @@ def send_invitation_emails(Attendee,Agenda,Venue):
 	# 		message=msg	
 	# )
 	print "_________________mailing____________"
-	"msg = frappe.render_template("templates/email/ticket_assigned.html", {
-		"Attendee":Attendee,
-		"Agenda": Agenda,
-		"Venue": Venue
-	})
+
+	msg = frappe.render_template("templates/email/conference_booking.html", {"Attendee":Attendee,"Agenda": Agenda,"Venue": Venue})	
 	frappe.sendmail(
 		recipients=Attendee,
 		sender=frappe.session.user,
@@ -33,13 +30,29 @@ def get_conference(start,end,filters=None):
 	print "\n\nstart=",start
 	print "\n\nend=",end
 
-	return frappe.db.sql("""select
-		timestamp('date',from_time) as start,
-		timestamp('date',to_time) as end,
-		name,
-		workflow_state
-		from `tabConference booking`
-		where date between %(start)s and %(end)s""",{
-		"start":start,
-		"end":end
-		},as_dict=True,debug=1)
+	# cal=frappe.db.sql("""select
+	# 	from_time as start_date,
+	# 	to_time as end_date,
+	# 	name,
+	# 	date1,
+	# 	workflow_state
+	# 	from `tabConference booking`
+	# 	where date1 between %(start)s and %(end)s""",{
+	# 	"start":start,
+	# 	"end":end
+	# 	},as_dict=True,debug=1,update={"allDay": 0})
+
+	cal=frappe.db.sql("""select
+	timestamp(date, from_time) as start_date,
+	timestamp(date, to_time) as end_date,
+	name,
+	workflow_state
+	from `tabConference booking`
+	where timestamp(date,from_time) between %(start)s and %(end)s
+	or timestamp(date,to_time) between %(start)s and %(end)s """,{
+	"start":start,
+	"end":end
+},as_dict=True,debug=1,update={"allDay": 0})
+
+	print "\ndetails=",cal
+	return cal

@@ -43,7 +43,7 @@ frappe.Search = Class.extend({
 			parent: $("#from_time"),
 			df: {
 				fieldtype: "Time",
-				fieldname: "frome_time",
+				fieldname: "from_time",
 				placeholder: "HH:MM",
 			},
 			render_input: true
@@ -115,11 +115,48 @@ frappe.Search = Class.extend({
 			
 			}
 		});	
+
 		
+
+
+    	$("#date").change(function(){
+        	console.log(me.date.value);
+        	if(me.date.value<frappe.datetime.nowdate())
+        	{
+        		frappe.msgprint("You cannot select past date");
+        	}
+    	});
+
+    	$("#to_time").change(function(){
+    		var sd=Date.parse(me.date.value+' '+me.from_time.input.value);
+			var ed=Date.parse(me.date.value+' '+me.to_time.input.value);
+			if(sd>ed)
+			{
+				frappe.msgprint("From Time Must Be Smaller Than To Time");
+			}
+    	});
+
+   //  	$("#from_time").change(function(){
+   //  		var sd=Date.parse(me.date.value+' '+me.from_time.input.value);
+			// var ed=Date.parse(me.date.value+' '+me.to_time.input.value);
+			// if(ed<sd)
+			// {
+			// 	frappe.msgprint("To Time Must Be Greater Than From Time");
+			// }
+   //  	});
+
+		$('#btn-cancel').click(function(){
+            me.date.value="";
+            console.log(me.date.value)
+           
+
+
+		}),	
 		$('#btn-search').click(function(){
 			var Selected_Faci = new Array();
 			console.log("Selected_Faci Type=",typeof(Selected_Faci))
 			//var Selected_Faci = [];
+        	//  adding selected facilities in Selected_Faci array
         	$(':checkbox:checked').each(function(i){
           		console.log($(this).attr('id'))
           		fa_id = $(this).attr('id');
@@ -160,26 +197,26 @@ frappe.Search = Class.extend({
 							console.log("status=",Object.values(data)[i]);
 							if (Object.values(data)[i]=="00")
         					{
-        					 Conference += "<tr><td>"+Object.keys(data)[i]+"</td><td>"+"Yes"+"</td><td> No </td>Value <td><button type='button' class='btn btn-default booking' id=b"+j+">Book</button></td><td><button type='button' class='btn btn-default' id=c"+j+">Calendar View</button></td> </tr>";
+        					 Conference += "<tr><td>"+Object.keys(data)[i]+"</td><td>"+"Yes"+"</td><td> No </td>Value <td><button type='button' class='btn btn-default booking' id=b"+j+">Book</button></td><td><a href='#Calendar/Conference booking'><button type='button' class='btn btn-default' id=c"+j+">Calendar View</button></a></td> </tr>";
         					 j++;
         					}
         					else
         					{
         					  if(Object.values(data)[i]=="01")
         					  {
-  	                   	      	Conference += "<tr><td>"+Object.keys(data)[i]+"</td><td>"+"Yes"+"</td><td> Yes </td>Value <td><button type='button' class='btn btn-default booking' id=b"+j+">Book</button></td><td><button type='button' class='btn btn-default' id=c"+j+">Calendar View</button></td> </tr>";
+  	                   	      	Conference += "<tr><td>"+Object.keys(data)[i]+"</td><td>"+"Yes"+"</td><td> Yes </td>Value <td><button type='button' class='btn btn-default booking' id=b"+j+">Book</button></td><td><a href='#Calendar/Conference booking'><button type='button' class='btn btn-default' id=c"+j+">Calendar View</button></a></td> </tr>";
                                 j++;
         					  }
         					  else
         					  {
         					  	if(Object.values(data)[i]=="10")
         					  	{
-        					  		Conference += "<tr><td>"+Object.keys(data)[i]+"</td><td>"+"No"+"</td><td> No </td>Value <td><button type='button' class='btn btn-default booking' id=b"+j+" disabled>Book</button></td><td><button type='button' class='btn btn-default' id=c"+j+">Calendar View</button></td> </tr>";
+        					  		Conference += "<tr><td>"+Object.keys(data)[i]+"</td><td>"+"No"+"</td><td> No </td>Value <td><button type='button' class='btn btn-default booking' id=b"+j+" disabled>Book</button></td><td><a href='#Calendar/Conference booking'><button type='button' class='btn btn-default' id=c"+j+">Calendar View</button></a></td> </tr>";
                                 	j++;
         					  	}
         					  	else
         					  	{
-                                  Conference += "<tr><td>"+Object.keys(data)[i]+"</td><td>"+"No"+"</td><td> Yes </td>Value <td><button type='button' class='btn btn-default booking' id=b"+j+" disabled>Book</button></td><td><button type='button' class='btn btn-default' id=c"+j+">Calendar View</button></td> </tr>";
+                                  Conference += "<tr><td>"+Object.keys(data)[i]+"</td><td>"+"No"+"</td><td> Yes </td>Value <td><button type='button' class='btn btn-default booking' id=b"+j+" disabled>Book</button></td><td> <a href='#Calendar/Conference booking'><button type='button' class='btn btn-default' id=c"+j+">Calendar View</button></a></td> </tr>";
         					  	  j++;  
         					   	}
 
@@ -203,11 +240,13 @@ frappe.Search = Class.extend({
 		})
 	},
 
-		check_time_slots:function(){
+	
+
+	// 	check_time_slots:function(){
 			
 
 
-	},
+	// },
 });	
 
 
