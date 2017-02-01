@@ -61,6 +61,10 @@ app_license = "MIT"
 # permission_query_conditions = {
 # 	"Event": "frappe.desk.doctype.event.event.get_permission_query_conditions",
 # }
+
+# permission_query_conditions = {
+# 	"Conference booking": "conference_management.conference_management.doctype.conference_booking.conference_booking.get_permission_query_conditions",
+#  }
 #
 # has_permission = {
 # 	"Event": "frappe.desk.doctype.event.event.has_permission",

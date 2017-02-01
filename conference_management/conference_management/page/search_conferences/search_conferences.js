@@ -146,12 +146,12 @@ frappe.Search = Class.extend({
    //  	});
 
 		$('#btn-cancel').click(function(){
-            me.date.value="";
-            console.log(me.date.value)
-           
+            //me.date.value="";
+            console.log(me.date,"")
+            $('#tbody').html("");
+            console.log(me.date.value)   
+		}),
 
-
-		}),	
 		$('#btn-search').click(function(){
 			var Selected_Faci = new Array();
 			console.log("Selected_Faci Type=",typeof(Selected_Faci))
@@ -188,47 +188,84 @@ frappe.Search = Class.extend({
 			 		callback:function(r)
 			 		{
 			 			data=r.message;
-			 			console.log(data);
 			 			Conference="";
-			 			j=1;
-			 			for (i=0;i<Object.keys(data).length;i++)
-						{
-							console.log("Conference=",Object.keys(data)[i]);
-							console.log("status=",Object.values(data)[i]);
-							if (Object.values(data)[i]=="00")
-        					{
-        					 Conference += "<tr><td>"+Object.keys(data)[i]+"</td><td>"+"Yes"+"</td><td> No </td>Value <td><button type='button' class='btn btn-default booking' id=b"+j+">Book</button></td><td><a href='#Calendar/Conference booking'><button type='button' class='btn btn-default' id=c"+j+">Calendar View</button></a></td> </tr>";
-        					 j++;
-        					}
-        					else
-        					{
-        					  if(Object.values(data)[i]=="01")
-        					  {
-  	                   	      	Conference += "<tr><td>"+Object.keys(data)[i]+"</td><td>"+"Yes"+"</td><td> Yes </td>Value <td><button type='button' class='btn btn-default booking' id=b"+j+">Book</button></td><td><a href='#Calendar/Conference booking'><button type='button' class='btn btn-default' id=c"+j+">Calendar View</button></a></td> </tr>";
-                                j++;
-        					  }
-        					  else
-        					  {
-        					  	if(Object.values(data)[i]=="10")
-        					  	{
-        					  		Conference += "<tr><td>"+Object.keys(data)[i]+"</td><td>"+"No"+"</td><td> No </td>Value <td><button type='button' class='btn btn-default booking' id=b"+j+" disabled>Book</button></td><td><a href='#Calendar/Conference booking'><button type='button' class='btn btn-default' id=c"+j+">Calendar View</button></a></td> </tr>";
-                                	j++;
-        					  	}
-        					  	else
-        					  	{
-                                  Conference += "<tr><td>"+Object.keys(data)[i]+"</td><td>"+"No"+"</td><td> Yes </td>Value <td><button type='button' class='btn btn-default booking' id=b"+j+" disabled>Book</button></td><td> <a href='#Calendar/Conference booking'><button type='button' class='btn btn-default' id=c"+j+">Calendar View</button></a></td> </tr>";
-        					  	  j++;  
-        					   	}
+			 			console.log(typeof(data));
+			 			console.log(data);
+			 			
+			 			if(data==null)
+			 			{
 
-        					  }
-        					  
-        					}
+			 				console.log("hmm");
+			 				Conference += "<tr><td colspan=5 align='center'>No Conference Found</td> </tr>";
+
+			 			}
+			 			else
+			 			{
+					 			j=1;
+					 			for (i=0;i<Object.keys(data).length;i++)
+								{
+									console.log("Conference=",Object.keys(data)[i]);
+									console.log("status=",Object.values(data)[i]);
+									if (Object.values(data)[i]=="00")
+		        					{ 	but_id=JSON.stringify(Object.keys(data)[i])
+		        					  	Conference += "<tr><td>"+Object.keys(data)[i]+"</td><td>"+"Yes"+"</td><td> No </td>Value <td><button type='button' class='btn btn-default booking' id="+but_id+">Book</button></td><td><a href='#Calendar/Conference booking'><button type='button' class='btn btn-default' id=c"+j+">Calendar View</button></a></td> </tr>";
+		        					  	j++;
+		        					}
+		        					else
+		        					{ 
+		        					  	if(Object.values(data)[i]=="01")
+		        					  	{ 
+		        					  		but_id=JSON.stringify(Object.keys(data)[i])
+		  	                   	      		Conference += "<tr><td>"+Object.keys(data)[i]+"</td><td>"+"Yes"+"</td><td> Yes </td>Value <td><button type='button' class='btn btn-default booking' id="+but_id+">Book</button></td><td><a href='#Calendar/Conference booking'><button type='button' class='btn btn-default' id=c"+j+">Calendar View</button></a></td> </tr>";
+		                                	j++;
+		        					  	}
+		        					  	else
+		        					  	{
+		        					  		if(Object.values(data)[i]=="10")
+		        					  		{	
+		        					  			but_id=JSON.stringify(Object.keys(data)[i])
+		        					  			Conference += "<tr><td>"+Object.keys(data)[i]+"</td><td>"+"No"+"</td><td> No </td>Value <td><button type='button' class='btn btn-default booking' id="+but_id+" disabled>Book</button></td><td><a href='#Calendar/Conference booking'><button type='button' class='btn btn-default' id=c"+j+">Calendar View</button></a></td> </tr>";
+		                                		j++;
+		        					  		}
+		        					  		else
+		        					  		{ 
+		        					  			but_id=JSON.stringify(Object.keys(data)[i])
+		                                  		Conference += "<tr><td>"+Object.keys(data)[i]+"</td><td>"+"No"+"</td><td> Yes </td>Value <td><button type='button' class='btn btn-default booking' id="+but_id+" disabled>Book</button></td><td> <a href='#Calendar/Conference booking'><button type='button' class='btn btn-default' id=c"+j+">Calendar View</button></a></td> </tr>";
+		        					  	  		j++;  
+		        					   		}
+		        					  	}
+		        					}  
+		        				}		
+						
 						}
 						$('#tbody').html(Conference);
 						
-						// For Redirect To Conference booking
+						// For Redirecting To Conference booking
 						$('.booking').click(function(){
-							frappe.new_doc("Conference booking");
+							// frappe.new_doc("Conference booking");
+							var But_me=this;
+							console.log("conf=",$(But_me).attr('id'));
+							console.log("meeeeee",me);
+							console.log("Date=",me.date.value);
+							console.log("From Time=",me.from_time.input.value);
+							console.log("To Time=",me.to_time.input.value);
+
+							tn = frappe.model.make_new_doc_and_get_name('Conference booking')
+							console.log(tn,"tn");
+							//console.log("date",me.date.value);
+							locals['Conference booking'][tn].email = user
+							locals['Conference booking'][tn].date = me.date.value;
+							locals['Conference booking'][tn].from_time = me.from_time.input.value;
+							locals['Conference booking'][tn].to_time = me.to_time.input.value;
+							locals['Conference booking'][tn].conference=$(But_me).attr('id');
+							frappe.set_route('Form', 'Conference booking', tn);
+							//frappe.route_options('Form', 'Conference booking',{'date':d,'from_time':ftime,'to_time':ttime});
+							// frappe.set_route('Form', 'Conference booking',{'date':d,'from_time':ftime,'to_time':ttime});
+							// cur_frm.cscript.new_date = function(){
+							// tn = frappe.model.make_new_doc_and_get_name('date');
+							// locals['date'][tn].date = 1;
+							// if(doc.Conference booking) locals['date'][tn].Conference booking = doc.Conference booking;
+
 						})
 
 						

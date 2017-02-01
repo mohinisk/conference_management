@@ -59,13 +59,27 @@ def get_conference(date,from_time,to_time,facilities):
                 if len(selected_facilities)!=0:
                         flag=0
                         for k in range(0,len(conf.facilities)):
-                                #print "\nfacilities=",conf.facilities[k].facility
+                                #print "\n conf facilities=",conf.facilities[k].facility
                                 for j in range(0,len(selected_facilities)):
-                                        if selected_facilities[j]==conf.facilities[k].facility:
-                                                flag=1
-                                        if flag==1:
-                                                d1={conferences[i]['name']:val}
-                                                conferences_result.update(d1)
+                                        if len(selected_facilities)<=len(conf.facilities):
+                                                if selected_facilities[j]==conf.facilities[j].facility:
+                                                        print"if selected=",conferences[i]['name'],selected_facilities[j]
+                                                        print "if conf.=",conferences[i]['name'],conf.facilities[j].facility
+                                                        flag=1
+                                                        print "True",flag
+                                                else:
+                                                        print "else selected=",conferences[i]['name'],selected_facilities[j]
+                                                        print "else conf=",conferences[i]['name'],conf.facilities[j].facility
+                                                        flag=0
+                                                        print "False",flag
+                                                        break;
+                                        else:
+                                                flag=0;         
+                                
+
+                                if flag==1:
+                                        d1={conferences[i]['name']:val}
+                                        conferences_result.update(d1)
                 else:
                         d1={conferences[i]['name']:val}
                         conferences_result.update(d1)
@@ -74,11 +88,12 @@ def get_conference(date,from_time,to_time,facilities):
                 cb_doc=frappe.get_doc("Conference booking",cdoc[i]['name'])
                 print "* Busy Conference Room*",cb_doc.conference
                 if cb_doc.conference in conferences_result:
-                        per=str(conferences_result[cb_doc.conference])
-                        p=per[1]
-                        per=str(1)+str(p)
-                        conferences_result[cb_doc.conference]=per
-                        #print "return value", conferences_result[cb_doc.conference]
+                        if cb_doc.workflow_state=="Approved":
+                                per=str(conferences_result[cb_doc.conference])
+                                p=per[1]
+                                per=str(1)+str(p)
+                                conferences_result[cb_doc.conference]=per
+                                #print "return value", conferences_result[cb_doc.conference]
         print "***************** conferences_result**************",conferences_result,"\n\n\n"
         return conferences_result
 
