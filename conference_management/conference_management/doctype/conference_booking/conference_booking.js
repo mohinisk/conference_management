@@ -10,6 +10,8 @@ frappe.ui.form.on('Conference booking', {
 	refresh: function(frm) {
 		//cur_frm.set_value("date1",cur_frm.doc.date);
 		console.log(cur_frm.doc.date)
+		cur_frm.set_df_property("conference","read_only",cur_frm.doc.__islocal ? 0: 1);
+
 
 		/*frappe.call({
 			method :"conference_management.conference_management.doctype.conference_booking.conference_booking.check_conference_permission",
@@ -48,6 +50,16 @@ frappe.ui.form.on('Conference booking', {
         		validated = false;
    			}
 	},
+	// conference: function(frm){
+	// 	console.log("COnference",frm.doc.conference);
+		
+	// 	frappe.call({
+	// 		method :"conference_management.conference_management.doctype.conference_booking.conference_booking.activate_conference_workflow",
+	// 		args:{
+	// 		 			"conference":frm.doc.conference
+	// 		 	}
+	// 		});
+	// },
 
 // For getting user location details by selecting user email on conference booking doctype
 	email:function(frm){

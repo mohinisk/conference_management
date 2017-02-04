@@ -88,7 +88,7 @@ def get_conference(date,from_time,to_time,facilities):
                 cb_doc=frappe.get_doc("Conference booking",cdoc[i]['name'])
                 print "* Busy Conference Room*",cb_doc.conference
                 if cb_doc.conference in conferences_result:
-                        if cb_doc.workflow_state=="Approved":
+                        if cb_doc.workflow_state=="Booked":
                                 per=str(conferences_result[cb_doc.conference])
                                 p=per[1]
                                 per=str(1)+str(p)

@@ -89,7 +89,7 @@ frappe.Search = Class.extend({
 					
 					for(i=0;i<Faci.length;i++)
 					{
-						console.log("Gundaaap",Faci[i])
+						console.log("______++++_____",Faci[i])
 
 					}
 				}
