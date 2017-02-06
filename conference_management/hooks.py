@@ -103,12 +103,12 @@ permission_query_conditions = {
 # 	]
 # }
 
-# scheduler_events = {
-# 	"all": [
-# 		"conference_management.conference_management.doctype.conference_booking.conference_booking.conference_close",
+scheduler_events = {
+	"all": [
+		"conference_management.conference_management.doctype.conference_booking.conference_booking.conference_close",
 		
-# 	]
-# }
+	]
+}
 # Testing
 # -------
 

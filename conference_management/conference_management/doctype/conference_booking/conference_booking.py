@@ -141,23 +141,37 @@ def get_permission_query_conditions(user):
 	if not user=="Administrator":
 		return "`tabConference booking`.email = '{0}'".format(user);
 
-# @frappe.whitelist()
-# def conference_close():
-# 	Book_conf = frappe.get_all("Conference booking",filters={'workflow_state':"Booked"})
-# 	print "\n\n\n\n\n\nBooked Conferences",Book_conf
-# 	for i in range(0,len(Book_conf)):
-# 		conf = frappe.get_doc("Conference booking",Book_conf[i]['name'])
-# 		print "\n\n\nname",conf.name
-# 		print "date",conf.date
-# 		print "to_time",conf.to_time
-# 		print "status",conf.workflow_state
-# 		d=str(conf.date)+" "+str(conf.to_time)
-# 		print type(d)
-# 		conf_datetime=frappe.utils.data.get_datetime(d)
-# 		print type(d)
-# 		print "datetime",d
-# 		print frappe.utils.data.now_datetime()
-# 		if conf_datetime > frappe.utils.data.now_datetime():
-# 			conf.workflow_state = "Closed"
-# 			conf.save()
-# 			print conf.name
+@frappe.whitelist()
+def conference_close():
+	Book_conf = frappe.get_all("Conference booking",filters={'workflow_state':"Booked"})
+	print "\n\n\n\n\n\nBooked Conferences",Book_conf
+	for i in range(0,len(Book_conf)):
+		conf = frappe.get_doc("Conference booking",Book_conf[i]['name'])
+		print "\n\n\nname",conf.name
+		print "date",conf.date
+		print "to_time",conf.to_time
+		print "status",conf.workflow_state
+		d=str(conf.date)+" "+str(conf.to_time)
+		#print type(d)
+		#conf_datetime=frappe.utils.data.getdate(d)
+		conf_datetime=frappe.utils.data.get_datetime(d)
+		print conf_datetime
+		print "type of conf_datetime",type(conf_datetime)
+		Current_datetime = frappe.utils.data.now_datetime()
+		print "Current_datetime",Current_datetime
+		print "type of current",type(Current_datetime)
+		date_difference = frappe.utils.data.date_diff
+		print "difference",frappe.utils.data.date_diff(Current_datetime,conf_datetime)
+		diff=frappe.utils.data.date_diff(Current_datetime,conf_datetime)
+		if diff > 0:
+			conf.workflow_state = "Closed"
+			conf.save()
+		 	print conf.name
+
+
+
+
+
+
+
+
