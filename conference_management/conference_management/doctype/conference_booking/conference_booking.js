@@ -3,28 +3,13 @@
 
 frappe.ui.form.on('Conference booking', {
 	onload: function(frm){
-
 		console.log(cur_frm.doc.conference); 
 
 	},
 	refresh: function(frm) {
 		//cur_frm.set_value("date1",cur_frm.doc.date);
 		console.log(cur_frm.doc.date)
-		cur_frm.set_df_property("conference","read_only",cur_frm.doc.__islocal ? 0: 1);
-
-
-		/*frappe.call({
-			method :"conference_management.conference_management.doctype.conference_booking.conference_booking.check_conference_permission",
-			args:{
-			 			"name":name
-			 	},
-			callback: function(r) {
-				console.log(,r.message);
-			}
-		});
-
-		*/
-		//console.log(frm.doc.area)
+		cur_frm.set_df_property("conference","read_only",cur_frm.doc.__islocal ? 0: 1);		
 	},
  	
 	date:function(frm){
@@ -50,19 +35,11 @@ frappe.ui.form.on('Conference booking', {
         		validated = false;
    			}
 	},
-	// conference: function(frm){
-	// 	console.log("COnference",frm.doc.conference);
-		
-	// 	frappe.call({
-	// 		method :"conference_management.conference_management.doctype.conference_booking.conference_booking.activate_conference_workflow",
-	// 		args:{
-	// 		 			"conference":frm.doc.conference
-	// 		 	}
-	// 		});
-	// },
+
 
 // For getting user location details by selecting user email on conference booking doctype
 	email:function(frm){
+		console.log("########____#######");
 		email=frm.doc.email
 		frappe.call({
 			method :"conference_management.conference_management.doctype.conference_booking.conference_booking.get_location",
@@ -70,14 +47,14 @@ frappe.ui.form.on('Conference booking', {
 			 			"email":email
 			 	},
 				callback: function(r) {
-					// console.log(r.message);
+					console.log("XYZ",r.message);
 					User_details=r.message;
 					cur_frm.set_value("location",User_details.location);
-					cur_frm.set_value("city",User_details.city);
-					cur_frm.set_value("facility",User_details.facility);
-					cur_frm.set_value("area",User_details.region);
-					cur_frm.set_value("building",User_details.floor);
-					cur_frm.set_value("bay",User_details.bay);
+					// cur_frm.set_value("city",User_details.city);
+					// cur_frm.set_value("facility",User_details.facility);
+					// cur_frm.set_value("area",User_details.region);
+					// cur_frm.set_value("building",User_details.floor);
+					// cur_frm.set_value("bay",User_details.bay);
 				}
 			});
 

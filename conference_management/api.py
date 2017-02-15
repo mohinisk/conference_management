@@ -28,7 +28,7 @@ def get_conference(start,end,filters=None):
 	name,
 	workflow_state
 	from `tabConference booking`
-	where timestamp(date,from_time) between %(start)s and %(end)s
+	where workflow_state='Booked' and timestamp(date,from_time) between %(start)s and %(end)s
 	or timestamp(date,to_time) between %(start)s and %(end)s """,{
 	"start":start,
 	"end":end

@@ -34,6 +34,7 @@ frappe.Search = Class.extend({
 			df: {
 				fieldtype: "Date",
 					fieldname: "date",
+					reqd:1,
 			},
 			render_input: true
 		});
@@ -44,6 +45,7 @@ frappe.Search = Class.extend({
 			df: {
 				fieldtype: "Time",
 				fieldname: "from_time",
+				reqd:1,
 				placeholder: "HH:MM",
 			},
 			render_input: true
@@ -55,6 +57,7 @@ frappe.Search = Class.extend({
 			df: {
 				fieldtype: "Time",
 				fieldname: "to_time",
+				reqd:1,
 				placeholder: "HH:MM",
 			},
 			render_input: true
@@ -65,12 +68,65 @@ frappe.Search = Class.extend({
 			parent: $("#attendees"),
 			df: {
 				fieldtype: "Int",
-				fieldname: "Attendees"
+				fieldname: "attendees",
+				reqd:1,
 				},
 			render_input: true
 		});
 		me.attendees.refresh();
+
+		me.area = frappe.ui.form.make_control({
+			parent: $("#area"),
+			df: {
+				fieldtype: "Link",
+				options: "Region",
+					fieldname: "area",
+					reqd:1,
+			},
+			render_input: true
+		});
+		me.area.refresh();
+
+		me.city = frappe.ui.form.make_control({
+			parent: $("#city"),
+			df: {
+				fieldtype: "Link",
+				options: "City",
+					fieldname: "city",
+					reqd:1,
+			},
+			render_input: true
+		});
+		me.city.refresh();
+
+
+		me.facility = frappe.ui.form.make_control({
+			parent: $("#facility"),
+			df: {
+				fieldtype: "Link",
+				options: "Facility",
+					fieldname: "facility",
+					reqd:1,
+			},
+			render_input: true
+		});
+		me.facility.refresh();
+
+		me.building = frappe.ui.form.make_control({
+			parent: $("#building"),
+			df: {
+				fieldtype: "Link",
+				options: "Floor",
+					fieldname: "building",
+					reqd:1,
+			},
+			render_input: true
+		});
+		me.building.refresh();
+
 	},
+
+	// frappe.client.get_value (Conference booking, fieldname, filters=None, as_dict=True, debug=False)
 
 	/*
 	get_facility:function() {
@@ -90,7 +146,7 @@ frappe.Search = Class.extend({
 					for(i=0;i<Faci.length;i++)
 					{
 						console.log("______++++_____",Faci[i])
-
+parseInt
 					}
 				}
 
@@ -112,12 +168,24 @@ frappe.Search = Class.extend({
 					facilities += "<div class='select-columns'><label><input type='checkbox' class='select-column-check' id='"+data.message[i]['name']+"'>  "+ data.message[i]['name'] +"</label></div>"
 				}
 				$('#facility_list').html(facilities)
-			
 			}
 		});	
 
-		
-
+	//For Fetching user details
+		frappe.call({
+			method :"conference_management.conference_management.page.search_conferences.search_conferences.get_location_details",
+			args:{
+			 			"user":user
+			 	},
+				callback: function(r) {
+					User_details=r.message;
+					me.area.input.value=User_details.region;
+					me.city.input.value=User_details.city;
+					me.facility.input.value=User_details.facility;
+					me.building.input.value=User_details.floor;
+					
+				}
+			});
 
     	$("#date").change(function(){
         	console.log(me.date.value);
@@ -147,7 +215,6 @@ frappe.Search = Class.extend({
 
 		$('#btn-cancel').click(function(){
             //me.date.value="";
-            console.log(me.date,"")
             $('#tbody').html("");
             console.log(me.date.value)   
 		}),
@@ -171,19 +238,32 @@ frappe.Search = Class.extend({
 
 			console.log("**",Selected_Faci);
 			console.log("**",Selected_Faci[0]);
-			if(!me.date.value)
+			// if(!me.attendees.value)
+			// {
+			// 	frappe.msgprint("Please Enter No.Of Attendees")
+			// }
+			if(!me.date.value || !me.attendees.value)
 			{
-				frappe.msgprint("PLEASE FILL FORM")
+				frappe.msgprint("PLEASE ENTER DATE,TIME AND ATTENDEES")
 			}
 			else
-			{
+			{   
+				console.log(me.area.input.value)
+				console.log(me.city.input.value)
+				console.log(me.facility.input.value)
+				
 				frappe.call({
 			 		method:"conference_management.conference_management.page.search_conferences.search_conferences.get_conference",
 			 		args:{
 			 			"date":me.date.value,
 			 			"from_time":me.from_time.input.value,
 			 			"to_time":me.to_time.input.value,
-			 			"facilities": Selected_Faci
+			 			"facilities": Selected_Faci,
+			 			"attendees":parseInt(me.attendees.value),
+			 			"city":me.city.input.value,
+			 			"facility":me.facility.input.value,
+			 			"building":me.building.value
+
 			 		},
 			 		callback:function(r)
 			 		{
@@ -238,17 +318,40 @@ frappe.Search = Class.extend({
 		        				}		
 						
 						}
+
+						var But_me=this;
+						var selected_bay = "";
+						frappe.call({
+								method :"conference_management.conference_management.page.search_conferences.search_conferences.get_bay",
+								args:{
+			 							"region":me.area.input.value,
+			 							"city":me.city.input.value,
+			 							"facility":me.facility.input.value,
+			 							"floor":me.building.input.value 
+			 						},
+								callback: function(r) {
+									console.log("get bay",r.message);
+									bay = r.message;
+									selected_bay = bay[0].name;
+									console.log(bay[0].name);
+							
+								}
+							});
 						$('#tbody').html(Conference);
 						
 						// For Redirecting To Conference booking
+
 						$('.booking').click(function(){
-							// frappe.new_doc("Conference booking");
 							var But_me=this;
 							console.log("conf=",$(But_me).attr('id'));
 							console.log("meeeeee",me);
 							console.log("Date=",me.date.value);
 							console.log("From Time=",me.from_time.input.value);
 							console.log("To Time=",me.to_time.input.value);
+							console.log("area=",me.area.input.value);
+							console.log("city",me.city.input.value);
+							console.log("facility",me.facility.input.value);
+							
 
 							tn = frappe.model.make_new_doc_and_get_name('Conference booking')
 							console.log(tn,"tn");
@@ -257,6 +360,11 @@ frappe.Search = Class.extend({
 							locals['Conference booking'][tn].date = me.date.value;
 							locals['Conference booking'][tn].from_time = me.from_time.input.value;
 							locals['Conference booking'][tn].to_time = me.to_time.input.value;
+							locals['Conference booking'][tn].area = me.area.input.value;
+							locals['Conference booking'][tn].city = me.city.input.value;
+							locals['Conference booking'][tn].facility = me.facility.input.value;
+							locals['Conference booking'][tn].building = me.building.input.value;
+							locals['Conference booking'][tn].bay = selected_bay;
 							locals['Conference booking'][tn].conference=$(But_me).attr('id');
 							frappe.set_route('Form', 'Conference booking', tn);
 							//frappe.route_options('Form', 'Conference booking',{'date':d,'from_time':ftime,'to_time':ttime});
@@ -279,11 +387,6 @@ frappe.Search = Class.extend({
 
 	
 
-	// 	check_time_slots:function(){
-			
-
-
-	// },
 });	
 
 

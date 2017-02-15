@@ -36,3 +36,15 @@ frappe.ui.form.on('Conference', {
 	
 
 });
+
+
+	cur_frm.fields_dict['facilities'].grid.get_field('facility').get_query = function(doc, cdt, cdn) {
+		facilities=[]
+		$.each(cur_frm.doc.facilities, function(idx, val){
+			facilities.push(val.facility)
+		})
+		console.log("facilities",facilities);	
+		return { filters: [['Facilities','facility','not in', facilities]]}
+	}
+
+

@@ -37,7 +37,8 @@ frappe.views.calendar["Conference booking"] = {
 		"name":"name",
 		"child_name": "name",
 		"title":"name",
-		"allDay": "allDay"
+		"allDay": "allDay",
+		"Conference":"conference"
 },
 // style_map: {
 // 	"0": "info", 

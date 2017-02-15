@@ -38,19 +38,19 @@ def facility_list():
         #print "******************************",facility_list
         return facility_list
 
-# For cheking conference on selected date and time and facilities
+# For cheking conference on selected date,time and facilities
 @frappe.whitelist()
-def get_conference(date,from_time,to_time,facilities):
+def get_conference(date,from_time,to_time,facilities,attendees,city,facility,building):
         
         selected_facilities=json.loads(facilities);
         print "\n\n\nselected_facilities=",selected_facilities
         print "type of selected_facilities", type(selected_facilities)
         # cdoc contain list of all conferences from Conference  Booking
         cdoc=frappe.get_all("Conference booking",filters={'date':date,'from_time':from_time,'to_time':to_time})
-        print "conferences from Conference  Booking",cdoc
+        print "conferences from Conference Booking",cdoc
         l=len(cdoc)
         # Conferences conatin all conferences from Conference
-        conferences=search_conference()
+        conferences=search_conference(attendees,city,facility)
         conferences_result={}   # Dictionary for Conference name,status,permission
         for i in range(0,len(conferences)):
                 conf=frappe.get_doc("Conference",conferences[i]['name']) #for getting facilities from conference
@@ -99,7 +99,21 @@ def get_conference(date,from_time,to_time,facilities):
 
 # Method for getting all conferences from conference Doctype
 @frappe.whitelist()
-def search_conference():
-        conf=frappe.get_all("Conference")
+def search_conference(attendees,city,facility):               
+        conf=frappe.get_all("Conference",filters=[['Conference','accommodation_capacity','>=',attendees],['Conference','city','=',city],['Conference','facility','=',facility]],debug=1)
+        print "\n\n\nconf",conf
+        print "city",city
+        print "facility",facility
+        #print "building", building
         return conf
 
+@frappe.whitelist()
+def get_location_details(user):
+        user=frappe.get_doc("User",user)
+        return user
+
+@frappe.whitelist() 
+def get_bay(region,city,facility,floor):               
+        bay_doc=frappe.get_all("Bay",filters=[['Bay','region','=',region],['Bay','city','=',city],['Bay','facility','=',facility],['Bay','floor','=',floor]],debug=1)
+        print "\n\n bay_doc",bay_doc
+        return bay_doc

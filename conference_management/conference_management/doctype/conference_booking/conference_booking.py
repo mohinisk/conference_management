@@ -10,125 +10,122 @@ from conference_management.api import send_invitation_emails
 class Conferencebooking(Document):
 	
 	def validate(self):
-		
+		if self.workflow_state=="Open":
+			self.workflow_state="Applied"
+		if self.workflow_state=="Approved":
+			self.workflow_state="Booked"
+		if self.workflow_state=="Rejected":
+			self.workflow_state="Closed"
 		if not check_conference_perm(self.conference):
 			self.workflow_state="Booked"
 		if not self.attendees:
-			print "========",self.attendees
+			print "=",self.attendees
 		else:
 			if self.workflow_state=="Booked":	
-				# For creating Event and Sharing Event
-				Attendees=self.attendees
-				Attendees=Attendees+str("#")
-				temp_email=""
-				# New Event 
-				Event_doc=frappe.new_doc("Event")
-				Event_doc.subject=self.name
-				start=str(self.date+" "+self.from_time)
-				end=str(self.date+" "+self.to_time)
-				Event_doc.starts_on=frappe.utils.data.parse_val(start)
-				Event_doc.ends_on=frappe.utils.data.parse_val(end)
-				Event_doc.event_type="Private"
-				Event_doc.flags.ignore_mandatory = True
-				Event_doc.save()
-				print "Name",Event_doc.name
-				Event_name=Event_doc.name
-				for  i in range(0,len(Attendees)):
-					if Attendees[i]=="," or Attendees[i]=="#":
-						Attendee=temp_email;
-						print "\nUser=",Attendee
-						#New Doc_share 
-						Docshare_doc=frappe.new_doc("DocShare")
-						#print len(Attendee)
-						#for j in range(0,len(Attendee)):
-						#	print"",Attendee[j],#
-						UDoc=frappe.get_doc("User",Attendee)
-						print UDoc.name
-						Docshare_doc.user=str(Attendee)
-						print "User+---",Attendee
-						Docshare_doc.share_doctype="Event"
-						Docshare_doc.share_name=Event_name
-						Docshare_doc.read=1
-						Docshare_doc.save()
-						Event_doc.send_reminder=1
-						Event_doc.save()
-
-						temp_email=""
-						print "______________________________"	
-					else:
-						temp_email=temp_email+str(Attendees[i])
-
-		if self.workflow_state=="Booked":
-			if self.send_invite==1:
-				print "send invite\n\n\n"
-				if self.email_sent!=1:
-					print "send invite\n\n\n"
-					Venue="From Time :"+self.from_time+" "+"To Time :"+self.to_time+"\n"+"Date :"+self.date
-					Attendees=self.attendees
-					Attendees=Attendees+str("#")
-					temp_email=" "
-					for  i in range(0,len(Attendees)):
-						if Attendees[i]=="," or Attendees[i]=="#":
-							Attendee=str(temp_email);
-							print "\nAttendee=",Attendee
-							temp_email=" "
-							send_invitation(self.name,Attendee,self.agenda,Venue)
-							print "_________________mail_____________"
-							self.email_sent=1	
-						else:
-							temp_email=temp_email+str(Attendees[i])
-
-		    # For Helpdesk pantry_service ticket 
-			if self.pantry_service==1:
-				pantry_doc=frappe.new_doc("Ticket")
-				pantry_doc.user=self.email
-				pantry_doc.region=self.area
-				pantry_doc.city=self.city
-				pantry_doc.facility=self.facility
-				pantry_doc.floor=self.building
-				pantry_doc.bay=self.bay
-				pantry_doc.function="Pantry Services"
-				pantry_doc.service="Pantry"
-				pantry_doc.service_type="Pantry-Pantry-Pantry Services"
-				pantry_doc.flags.ignore_mandatory = True
-				pantry_doc.save()
-
-			if self.date < frappe.utils.data.nowdate():
+				create_conference_event(self.name,self.date,self.from_time,self.to_time,self.attendees)
+				if self.send_invite==1:
+					if self.email_sent!=1:
+						self.email_sent==send_invitation(self.name,self.agenda,self.from_time,self.to_time,self.date,self.attendees)
+		   		#For Helpdesk pantry_service ticket 
+				if self.pantry_service==1:
+					create_pantry_ticket(self.email,self.area,self.city,self.facility,self.building,self.bay,self.date,self.from_time)
+				
+		if frappe.utils.data.date_diff(self.date ,frappe.utils.data.nowdate())< 0:
 				frappe.msgprint("You cannot select past date")
 
-			if self.from_time > self.to_time:
-				frappe.msgprint("From Time Must Be Smaller Than To Time")
+			# if self.from_time > self.to_time:
+			# 	frappe.msgprint("From Time Must Be Smaller Than To Time")
 
-			if self.to_time < self.from_time:
-				frappe.msgprint("To Time Must Be Greater Than From Time")
-		
-		
+			# if self.to_time < self.from_time:
+			# 	frappe.msgprint("To Time Must Be Greater Than From Time")
+				
+@frappe.whitelist()
+def send_invitation(Name,Agenda,from_time,to_time,date,attendees):
+	Venue="From Time :"+str(from_time)+" "+"To Time :"+str(to_time)+"\n"+"Date :"+str(date)
+	Attendees=attendees
+	Attendees=Attendees+str("#")
+	temp_email=" "
+	flg=0
+	for  i in range(0,len(Attendees)):
+		if Attendees[i]=="," or Attendees[i]=="#":
+			Attendee=str(temp_email);
+			print "\nAttendee=",Attendee	
+			send_invitation_emails(Name,Attendee,Agenda,Venue)
+			temp_email=" "
+			flg=1
+			print "_________________mail_____________"	
+		else:
+			temp_email=temp_email+str(Attendees[i])
 
-# @frappe.whitelist()
-# def activate_conference_workflow(conference):
-# 	workflow_conference=frappe.get_doc("Conference",conference)
-# 	print "\n\nworkflow_conference.require_permission",workflow_conference.require_permission		
-# 	if workflow_conference.require_permission!=1:
-# 		workflow_doc=frappe.get_doc("Workflow","Booking_permission")
-# 		print "\n\nworkflow_doc.is_active",workflow_doc.is_active
-# 		workflow_doc.is_active = 0
-# 		workflow_doc.save(ignore_permissions=True)
-# 	else:
-# 		workflow_doc=frappe.get_doc("Workflow","Booking_permission")
-# 		workflow_doc.is_active = 1
-# 		workflow_doc.save(ignore_permissions=True)
+	return flg
 
+# For creating Event and Sharing Event	
+@frappe.whitelist()
+def create_conference_event(name,date,from_time,to_time,attendees):
+	Attendees=attendees
+	Attendees=Attendees+str("#")
+	temp_email=""	
+	Event_doc=frappe.new_doc("Event")
+	Event_doc.subject=name
+	start=str(date)+" "+str(from_time)
+	print "\ndate",date
+	print "from_time",from_time
+	print "\ndate",date
+	print "to_time",to_time
+	start_date=frappe.utils.data.get_datetime(start)
+	end=str(date)+" "+str(to_time)
+	end_date=frappe.utils.data.get_datetime(end)
+	print "\nstart_date",start_date
+	print "end_date",end_date
+	print "end_date",frappe.utils.data.now_datetime()
+	Event_doc.starts_on=start_date
+	Event_doc.ends_on=end_date
+	Event_doc.event_type="Private"
+	Event_doc.flags.ignore_mandatory = True
+	Event_doc.save()
+	print "Name",Event_doc.name
+	Event_name=Event_doc.name
+	for  i in range(0,len(Attendees)):
+		if Attendees[i]=="," or Attendees[i]=="#":
+			Attendee=temp_email;
+			#New Doc_share 
+			Docshare_doc=frappe.new_doc("DocShare")
+			UDoc=frappe.get_doc("User",Attendee)
+			Docshare_doc.user=str(Attendee)
+			Docshare_doc.share_doctype="Event"
+			Docshare_doc.share_name=Event_name
+			Docshare_doc.read=1
+			Docshare_doc.save()
+			Event_doc.send_reminder=0
+			Event_doc.save()
+			temp_email=""
+		else:
+			temp_email=temp_email+str(Attendees[i])
+
+@frappe.whitelist()
+def create_pantry_ticket(email,area,city,facility,building,bay,date,from_time):
+	pantry_doc=frappe.new_doc("Ticket")
+	pantry_doc.user=email
+	pantry_doc.region=area
+	pantry_doc.city=city
+	pantry_doc.facility=facility
+	pantry_doc.floor=building
+	pantry_doc.bay=bay
+	pantry_doc.function="Pantry Services"
+	pantry_doc.service="Pantry"
+	pantry_doc.service_type="Pantry-Pantry-Pantry Services"
+	creation_d=str(date)+" "+str(from_time)
+	creation_date = frappe.utils.data.get_datetime(creation_d)
+	pantry_doc.creation = creation_date
+	pantry_doc.flags.ignore_mandatory = True
+	pantry_doc.save()
+	print "\nTicket No=",pantry_doc.name
 		
 @frappe.whitelist()
 def get_location(email):
 	user=frappe.get_doc("User",email)
 	return user
 	
-@frappe.whitelist()
-def send_invitation(Name,Attendee,Agenda,Venue):
-	send_invitation_emails(Name,Attendee,Agenda,Venue)
-	print "_________________send_invitation____________"
-
 @frappe.whitelist()
 def check_conference_perm(name):
 	conf_doc=frappe.get_doc("Conference",name)
@@ -141,33 +138,67 @@ def get_permission_query_conditions(user):
 	if not user=="Administrator":
 		return "`tabConference booking`.email = '{0}'".format(user);
 
+
+# @frappe.whitelist()
+# def get_events_grid(start, end,filters=None):
+# 	import json
+# 	filters=json.loads(filters)
+# 	events = frappe.db.sql("""select name, employee, employee as resource ,starts_on, ends_on, customer,
+# 		status,0 as all_day from `tabAppointment` where %(employee_condition)s (( (date(starts_on) between 
+# 		date('%(start)s') and date('%(end)s'))
+# 		or (date(ends_on) between date('%(start)s') and date('%(end)s'))
+# 		or (date(starts_on) <= date('%(start)s') and date(ends_on) >= date('%(end)s'))
+# 		)) order by starts_on""" % {
+# 			"start": start,
+# 			"end": end,
+# 			"employee_condition": " employee= '"+filters['employee']+"'  and " if filters['employee'] else ""
+# 		}, as_dict=1)
+
+
+# @frappe.whitelist()
+# def get_conferences():
+# 	conferences = frappe.db.sql("""select conference,workflow_state from `tabConference booking` where workflow_state='Booked' 
+# 	""", as_dict=1)
+# 	# frappe.errprint(employees)
+# 	return conferences
+
+
+
 @frappe.whitelist()
 def conference_close():
 	Book_conf = frappe.get_all("Conference booking",filters={'workflow_state':"Booked"})
-	print "\n\n\n\n\n\nBooked Conferences",Book_conf
+	print "\nBooked Conferences",Book_conf
 	for i in range(0,len(Book_conf)):
-		conf = frappe.get_doc("Conference booking",Book_conf[i]['name'])
-		print "\n\n\nname",conf.name
-		print "date",conf.date
-		print "to_time",conf.to_time
-		print "status",conf.workflow_state
-		d=str(conf.date)+" "+str(conf.to_time)
-		#print type(d)
-		#conf_datetime=frappe.utils.data.getdate(d)
-		conf_datetime=frappe.utils.data.get_datetime(d)
-		print conf_datetime
-		print "type of conf_datetime",type(conf_datetime)
-		Current_datetime = frappe.utils.data.now_datetime()
-		print "Current_datetime",Current_datetime
-		print "type of current",type(Current_datetime)
-		date_difference = frappe.utils.data.date_diff
-		print "difference",frappe.utils.data.date_diff(Current_datetime,conf_datetime)
-		diff=frappe.utils.data.date_diff(Current_datetime,conf_datetime)
+		conf_date = frappe.get_value("Conference booking", Book_conf[i]['name'], "date")
+		conf_to_time = frappe.get_value("Conference booking", Book_conf[i]['name'], "to_time")
+		conf_datetime = str(conf_date)+" "+str(conf_to_time)
+		conf_datetime1 = frappe.utils.data.get_datetime(conf_datetime)
+		current_datetime = frappe.utils.data.now_datetime()
+		diff=frappe.utils.data.date_diff(current_datetime,conf_datetime1)
 		if diff > 0:
-			conf.workflow_state = "Closed"
-			conf.save()
-		 	print conf.name
+			print "\n\n conf time greater than current time",Book_conf[i]['name']
+			close_conf=frappe.db.sql("""update `tabConference booking` set workflow_state='Closed' where name=%s""",(Book_conf[i]['name']))
+			print close_conf
 
+		# conf = frappe.get_doc("Conference booking",Book_conf[i]['name'])
+		# print "\n\nconference Name",conf.name
+		# d=str(conf.date)+" "+str(conf.to_time)
+		# conf_datetime=frappe.utils.data.get_datetime(d)
+		# print conf_datetime
+		# print "type of conf_datetime",type(conf_datetime)
+		# Current_datetime = frappe.utils.data.now_datetime()
+		# print "Current_datetime",Current_datetime
+		# print "type of current",type(Current_datetime)
+		# print "difference",frappe.utils.data.date_diff(Current_datetime,conf_datetime)
+		# diff=frappe.utils.data.date_diff(Current_datetime,conf_datetime)
+		# conf.workflow_state = "Closed"
+		# if diff > 0:
+		# 	print conf.workflow_state 
+		# 	conf.workflow_state = "Closed"
+		# 	conf.flags.ignore_mandatory = True
+		# 	conf.save()
+		# 	print "=",conf.workflow_state
+		# 	print "--conference Name",conf.name
 
 
 
