@@ -1,0 +1,158 @@
+[
+ {
+  "docstatus": 0, 
+  "doctype": "Workflow", 
+  "document_type": "Conference", 
+  "is_active": 0, 
+  "modified": "2017-01-20 18:02:36.612101", 
+  "name": "Conference_Permission", 
+  "states": [
+   {
+    "allow_edit": "WNS User", 
+    "doc_status": "0", 
+    "message": null, 
+    "state": "Open", 
+    "update_field": null, 
+    "update_value": null
+   }, 
+   {
+    "allow_edit": "WNS User", 
+    "doc_status": "0", 
+    "message": null, 
+    "state": "Applied", 
+    "update_field": "", 
+    "update_value": null
+   }, 
+   {
+    "allow_edit": "Administrator", 
+    "doc_status": "0", 
+    "message": null, 
+    "state": "Approved", 
+    "update_field": null, 
+    "update_value": null
+   }, 
+   {
+    "allow_edit": "Administrator", 
+    "doc_status": "0", 
+    "message": null, 
+    "state": "Rejected", 
+    "update_field": null, 
+    "update_value": null
+   }
+  ], 
+  "transitions": [
+   {
+    "action": "Apply", 
+    "allowed": "WNS User", 
+    "next_state": "Applied", 
+    "state": "Open"
+   }, 
+   {
+    "action": "Approve", 
+    "allowed": "Administrator", 
+    "next_state": "Approved", 
+    "state": "Applied"
+   }, 
+   {
+    "action": "Reject", 
+    "allowed": "Administrator", 
+    "next_state": "Rejected", 
+    "state": "Applied"
+   }
+  ], 
+  "workflow_name": "Conference_Permission", 
+  "workflow_state_field": "workflow_state"
+ }, 
+ {
+  "docstatus": 0, 
+  "doctype": "Workflow", 
+  "document_type": "Conference booking", 
+  "is_active": 1, 
+  "modified": "2017-02-15 15:15:51.456483", 
+  "name": "Booking_permission", 
+  "states": [
+   {
+    "allow_edit": "WNS User", 
+    "doc_status": "0", 
+    "message": null, 
+    "state": "Open", 
+    "update_field": null, 
+    "update_value": null
+   }, 
+   {
+    "allow_edit": "WNS User", 
+    "doc_status": "0", 
+    "message": null, 
+    "state": "Applied", 
+    "update_field": null, 
+    "update_value": null
+   }, 
+   {
+    "allow_edit": "Administrator", 
+    "doc_status": "0", 
+    "message": null, 
+    "state": "Approved", 
+    "update_field": null, 
+    "update_value": null
+   }, 
+   {
+    "allow_edit": "Administrator", 
+    "doc_status": "0", 
+    "message": null, 
+    "state": "Rejected", 
+    "update_field": null, 
+    "update_value": null
+   }, 
+   {
+    "allow_edit": "Administrator", 
+    "doc_status": "0", 
+    "message": null, 
+    "state": "Booked", 
+    "update_field": null, 
+    "update_value": null
+   }, 
+   {
+    "allow_edit": "Administrator", 
+    "doc_status": "0", 
+    "message": null, 
+    "state": "Closed", 
+    "update_field": null, 
+    "update_value": null
+   }
+  ], 
+  "transitions": [
+   {
+    "action": "Apply", 
+    "allowed": "WNS User", 
+    "next_state": "Applied", 
+    "state": "Open"
+   }, 
+   {
+    "action": "Approve", 
+    "allowed": "Administrator", 
+    "next_state": "Approved", 
+    "state": "Applied"
+   }, 
+   {
+    "action": "Book", 
+    "allowed": "Administrator", 
+    "next_state": "Booked", 
+    "state": "Approved"
+   }, 
+   {
+    "action": "Reject", 
+    "allowed": "Administrator", 
+    "next_state": "Rejected", 
+    "state": "Applied"
+   }, 
+   {
+    "action": "Close", 
+    "allowed": "Administrator", 
+    "next_state": "Closed", 
+    "state": "Rejected"
+   }
+  ], 
+  "workflow_name": "Booking_permission", 
+  "workflow_state_field": "workflow_state"
+ }
+]

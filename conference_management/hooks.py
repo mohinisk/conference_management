@@ -48,6 +48,8 @@ app_license = "MIT"
 # before_install = "conference_management.install.before_install"
 # after_install = "conference_management.install.after_install"
 
+fixtures = ["Role", "Custom Field", "Property Setter", "Print Format", "Letter Head", "Workflow State", "Workflow Action", "Workflow"]
+
 # Desk Notifications
 # ------------------
 # See frappe.core.notifications.get_notification_config
