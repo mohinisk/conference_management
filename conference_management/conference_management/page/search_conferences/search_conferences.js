@@ -219,7 +219,36 @@ parseInt
             console.log(me.date.value)   
 		}),
 
+		function ValidateFunction() {
+			console.log("Validate Date",me.date.value);
+		}
+
 		$('#btn-search').click(function(){
+			var validate_flag=1;
+			if(!me.date.value)
+			{
+				frappe.msgprint("Plase Enter Date")
+				validate_flag=0
+			}
+			if(!me.from_time.input.value)
+			{
+				frappe.msgprint("Please enter From Time")
+				validate_flag=0
+			}
+			if(!me.to_time.input.value)
+			{
+				frappe.msgprint("Please enter To Time")
+				validate_flag=0
+			}
+			if(!me.attendees.value)
+			{
+				frappe.msgprint("Please enter No.of Attendees")
+				validate_flag=0
+			}
+			
+
+
+
 			var Selected_Faci = new Array();
 			console.log("Selected_Faci Type=",typeof(Selected_Faci))
 			//var Selected_Faci = [];
@@ -242,9 +271,11 @@ parseInt
 			// {
 			// 	frappe.msgprint("Please Enter No.Of Attendees")
 			// }
-			if(!me.date.value || !me.attendees.value)
+
+
+			if(validate_flag==0)
 			{
-				frappe.msgprint("PLEASE ENTER DATE,TIME AND ATTENDEES")
+				
 			}
 			else
 			{   
