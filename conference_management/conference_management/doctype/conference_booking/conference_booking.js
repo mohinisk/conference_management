@@ -9,6 +9,7 @@ frappe.ui.form.on('Conference booking', {
 	refresh: function(frm) {
 		//cur_frm.set_value("date1",cur_frm.doc.date);
 		console.log(cur_frm.doc.date)
+		cur_frm.set_df_property("email","read_only",cur_frm.doc.__islocal ? 0: 1);
 		cur_frm.set_df_property("conference","read_only",cur_frm.doc.__islocal ? 0: 1);	
 
 		cur_frm.set_df_property("conference","read_only",cur_frm.doc.__islocal ? 0: 1);

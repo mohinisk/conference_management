@@ -4,7 +4,7 @@ import frappe
 @frappe.whitelist()
 def send_invitation_emails(Name,Attendee,Agenda,Venue):
 	print "_________________mailing____________"
-	url="http://192.168.5.51:8000/desk#Calendar/Event"
+	url="http://localhost:8000/desk#Calendar/Event"
 
 	msg = frappe.render_template("templates/email/conference_booking.html", {"Name":Name,"Attendee":Attendee,"Agenda": Agenda,"Venue": Venue,"base_url":url})	
 	frappe.sendmail(
