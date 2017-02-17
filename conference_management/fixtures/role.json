@@ -142,5 +142,13 @@
   "modified": "2016-08-09 14:57:54.723394", 
   "name": "Region Senior VP", 
   "role_name": "Region Senior VP"
+ }, 
+ {
+  "disabled": 0, 
+  "docstatus": 0, 
+  "doctype": "Role", 
+  "modified": "2017-02-16 16:50:30.663498", 
+  "name": "Conference User", 
+  "role_name": "Conference User"
  }
 ]

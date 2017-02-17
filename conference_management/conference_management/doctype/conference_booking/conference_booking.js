@@ -10,6 +10,9 @@ frappe.ui.form.on('Conference booking', {
 		//cur_frm.set_value("date1",cur_frm.doc.date);
 		console.log(cur_frm.doc.date)
 		cur_frm.set_df_property("conference","read_only",cur_frm.doc.__islocal ? 0: 1);	
+
+		cur_frm.set_df_property("conference","read_only",cur_frm.doc.__islocal ? 0: 1);
+
 		cur_frm.set_df_property("area","read_only",cur_frm.doc.__islocal ? 0: 1);
 		cur_frm.set_df_property("city","read_only",cur_frm.doc.__islocal ? 0: 1);
 		cur_frm.set_df_property("facility","read_only",cur_frm.doc.__islocal ? 0: 1);
@@ -22,7 +25,7 @@ frappe.ui.form.on('Conference booking', {
 		cur_frm.set_df_property("send_invite","read_only",cur_frm.doc.__islocal ? 0: 1);
 		cur_frm.set_df_property("agenda","read_only",cur_frm.doc.__islocal ? 0: 1);
 		cur_frm.set_df_property("pantry_service","read_only",cur_frm.doc.__islocal ? 0: 1);
-	
+
 	},
  	
 	date:function(frm){
