@@ -26,9 +26,12 @@ class Conferencebooking(Document):
 				if self.send_invite==1:
 					if self.email_sent!=1:
 						self.email_sent==send_invitation(self.name,self.agenda,self.from_time,self.to_time,self.date,self.attendees)
-		   		#For Helpdesk pantry_service ticket 
-				if self.pantry_service==1:
-					create_pantry_ticket(self.email,self.area,self.city,self.facility,self.building,self.bay,self.date,self.from_time)
+		
+
+		#For Helpdesk pantry_service ticket 
+		if self.workflow_state=="Booked":
+			if self.pantry_service==1:
+				create_pantry_ticket(self.email,self.area,self.city,self.facility,self.building,self.bay,self.date,self.from_time)   		
 				
 		if frappe.utils.data.date_diff(self.date ,frappe.utils.data.nowdate())< 0:
 				frappe.msgprint("You cannot select past date")
@@ -41,7 +44,7 @@ class Conferencebooking(Document):
 				
 @frappe.whitelist()
 def send_invitation(Name,Agenda,from_time,to_time,date,attendees):
-	Venue="From Time :"+str(from_time)+" "+"To Time :"+str(to_time)+"\n"+"Date :"+str(date)
+	Venue="From Time :"+str(from_time)+" "+"To Time :"+str(to_time)+"\n"+"On Date :"+str(date)
 	Attendees=attendees
 	Attendees=Attendees+str("#")
 	temp_email=" "

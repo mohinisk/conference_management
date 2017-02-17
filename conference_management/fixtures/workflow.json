@@ -68,7 +68,7 @@
   "doctype": "Workflow", 
   "document_type": "Conference booking", 
   "is_active": 1, 
-  "modified": "2017-02-15 15:15:51.456483", 
+  "modified": "2017-02-16 13:46:13.781594", 
   "name": "Booking_permission", 
   "states": [
    {

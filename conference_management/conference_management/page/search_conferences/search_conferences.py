@@ -46,7 +46,7 @@ def get_conference(date,from_time,to_time,facilities,attendees,city,facility,bui
         print "\n\n\nselected_facilities=",selected_facilities
         print "type of selected_facilities", type(selected_facilities)
         # cdoc contain list of all conferences from Conference  Booking
-        cdoc=frappe.get_all("Conference booking",filters={'date':date,'from_time':from_time,'to_time':to_time})
+        cdoc=frappe.get_all("Conference booking",filters={'date':date,'from_time':from_time,'to_time':to_time},debug=1)
         print "conferences from Conference Booking",cdoc
         l=len(cdoc)
         # Conferences conatin all conferences from Conference
