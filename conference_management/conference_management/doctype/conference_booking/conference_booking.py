@@ -203,9 +203,16 @@ def conference_close():
 		# 	print "=",conf.workflow_state
 		# 	print "--conference Name",conf.name
 
-
-
-
+@frappe.whitelist()
+def check_availability(date,from_time,to_time):
+	cdoc=frappe.get_all("Conference booking",filters={'date':date,'from_time':from_time,'to_time':to_time},debug=1)
+        print "conferences from Conference Booking",cdoc
+        if not cdoc:
+        	print "\n\n\ncdoc","Yes"
+        	return "Available"
+        else:
+        	print "\n\n\n","No"
+        	return "Not Available"
 
 
 

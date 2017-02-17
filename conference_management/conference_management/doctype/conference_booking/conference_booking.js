@@ -76,6 +76,27 @@ frappe.ui.form.on('Conference booking', {
 			});
 
 	},
+	check_availability:function(frm){
+		frappe.call({
+			method :"conference_management.conference_management.doctype.conference_booking.conference_booking.check_availability",
+			args:{
+			 			"date":cur_frm.doc.date,
+			 			"from_time":cur_frm.doc.from_time,
+			 			"to_time":cur_frm.doc.to_time
+			 	},
+				callback: function(r) {
+					console.log("$$$$$",r.message);
+					if(r.message=="Available"){
+						cur_frm.set_value("availability",r.message);
+					}
+					else
+					{
+						cur_frm.set_value("availability",r.message);	
+					}
+				}
+			});
+
+	}
 	
 	// validate:function(frm){
 		
