@@ -35,7 +35,10 @@ class Conferencebooking(Document):
 				
 		if frappe.utils.data.date_diff(self.date ,frappe.utils.data.nowdate())< 0:
 				frappe.msgprint("You cannot select past date")
-
+		if self.availability=="Not Available":
+			frappe.throw("You cannot apply for this conference, please check availability")
+		#self.save()
+				
 			# if self.from_time > self.to_time:
 			# 	frappe.msgprint("From Time Must Be Smaller Than To Time")
 
@@ -203,16 +206,26 @@ def conference_close():
 		# 	print "=",conf.workflow_state
 		# 	print "--conference Name",conf.name
 
+
 @frappe.whitelist()
-def check_availability(date,from_time,to_time):
-	cdoc=frappe.get_all("Conference booking",filters={'date':date,'from_time':from_time,'to_time':to_time},debug=1)
-        print "conferences from Conference Booking",cdoc
-        if not cdoc:
-        	print "\n\n\ncdoc","Yes"
-        	return "Available"
-        else:
-        	print "\n\n\n","No"
-        	return "Not Available"
+def check_availability(date,from_time,to_time,conference):
+	check_conf=frappe.db.sql("""select `tabConference booking`.`name` from `tabConference booking` where `tabConference booking`.date =%s and `tabConference booking`.conference =%s and `tabConference booking`.from_time = %s and `tabConference booking`.to_time between %s and %s""",(date,conference,from_time,from_time,to_time),as_dict=True,debug=1)
+	if not check_conf:
+		print "\n\nAvailable"
+		return "Available"
+	else:
+		print "\n\nNot Available"
+		print "check_conf",check_conf
+		return "Not Available"
+
+@frappe.whitelist()
+def get_conference_details(conference_name):
+	conf_detail=frappe.get_doc("Conference",conference_name)
+	print "\n\n\n\nConf",conf_detail
+	print "\n\n\n\naccommodation_capacity",conf_detail.accommodation_capacity
+	print "\n\n\n\nfacilities",conf_detail.facilities
+	return conf_detail
+
 
 
 
