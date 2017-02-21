@@ -209,7 +209,7 @@ def conference_close():
 
 @frappe.whitelist()
 def check_availability(date,from_time,to_time,conference):
-	check_conf=frappe.db.sql("""select `tabConference booking`.`name` from `tabConference booking` where `tabConference booking`.date =%s and `tabConference booking`.conference =%s and `tabConference booking`.from_time = %s and `tabConference booking`.to_time between %s and %s""",(date,conference,from_time,from_time,to_time),as_dict=True,debug=1)
+	check_conf=frappe.db.sql("""select `tabConference booking`.`name` from `tabConference booking` where `tabConference booking`.date =%s and `tabConference booking`.conference =%s and `tabConference booking`.from_time between %s and %s and `tabConference booking`.to_time between %s and %s""",(date,conference,from_time,to_time,from_time,to_time),as_dict=True,debug=1)
 	if not check_conf:
 		print "\n\nAvailable"
 		return "Available"

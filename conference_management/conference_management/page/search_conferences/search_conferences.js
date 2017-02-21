@@ -21,12 +21,24 @@ frappe.Search = Class.extend({
 
 	make_page: function() {
 		var me = this;
-
 		me.setup_page();
 		///me.get_facility();
 		me.get_values();
+		me.refresh();
 	},
 
+	refresh: function(){
+	var me = this;
+	console.log("me",me);
+		me.date.value=" ";
+        me.from_time.value=" ";
+        me.from_time.value=" ";
+        me.to_time.value=" ";
+        me.attendees.value=" ";
+            //me.area.input.value=" ";
+            //me.from_time.input.value=" ";
+            $('#tbody').html("");
+	},
 	setup_page: function() {
 		var me = this;
 		me.date = frappe.ui.form.make_control({
@@ -81,19 +93,24 @@ frappe.Search = Class.extend({
 				fieldtype: "Link",
 				options: "Region",
 					fieldname: "area",
-					reqd:1,
+					//reqd:1,
 			},
 			render_input: true
 		});
 		me.area.refresh();
-
+	
 		me.city = frappe.ui.form.make_control({
+
 			parent: $("#city"),
 			df: {
 				fieldtype: "Link",
 				options: "City",
-					fieldname: "city",
-					reqd:1,
+				fieldname: "city",
+				get_query: function() {
+					return {
+						filters: {"region": me.area.input.value},
+					}
+				},
 			},
 			render_input: true
 		});
@@ -106,7 +123,12 @@ frappe.Search = Class.extend({
 				fieldtype: "Link",
 				options: "Facility",
 					fieldname: "facility",
-					reqd:1,
+					get_query: function() {
+					return {
+						filters: {"city": me.city.input.value},
+					}
+				},
+					//reqd:1,
 			},
 			render_input: true
 		});
@@ -118,7 +140,12 @@ frappe.Search = Class.extend({
 				fieldtype: "Link",
 				options: "Floor",
 					fieldname: "building",
-					reqd:1,
+					get_query: function() {
+					return {
+						filters: {"facility": me.facility.input.value},
+					}
+				},
+					//reqd:1,
 			},
 			render_input: true
 		});
@@ -187,16 +214,7 @@ parseInt
 					
 				}
 			});
-
-		
-
-		/*get_query: function() {
-		return {
-				filters:{
-						"area": frappe.treeview_settings.filters["city"]
-						}
-				}
-		}*/
+		console.log("AREA",me.area);
 
     	$("#date").change(function(){
         	console.log(me.date.value);
@@ -209,7 +227,7 @@ parseInt
     	$("#to_time").change(function(){
     		var sd=Date.parse(me.date.value+' '+me.from_time.input.value);
 			var ed=Date.parse(me.date.value+' '+me.to_time.input.value);
-			if(sd>ed)
+			if(sd>=ed)
 			{
 				frappe.msgprint("From Time Must Be Smaller Than To Time");
 			}
@@ -225,8 +243,15 @@ parseInt
    //  	});
 
 		$('#btn-cancel').click(function(){
-            //me.date.value="";
+            me.date.input.value=" ";
+            me.from_time.input.value=" ";
+            me.from_time.input.value=" ";
+            me.to_time.input.value=" ";
+            me.attendees.input.value=" ";
+            //me.area.input.value=" ";
+            //me.from_time.input.value=" ";
             $('#tbody').html("");
+            me.date.value="";
             console.log(me.date.value)   
 		}),
 
@@ -292,7 +317,7 @@ parseInt
 				
 			}
 			else
-			{   
+			{   //a = me.area.input.value;
 				console.log(me.area.input.value)
 				console.log(me.city.input.value)
 				console.log(me.facility.input.value)
