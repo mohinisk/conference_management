@@ -19,6 +19,33 @@ frappe.ui.form.on('Conference booking', {
 			}
 		})
 
+		frm.set_query("city", function(){
+			return {
+				"filters": {
+					"region": frm.doc.area
+				}
+			}
+		})
+		frm.set_query("facility", function(){
+	 		return {
+	 			"filters": {
+	 				"city": frm.doc.city
+	 			}
+	 		};
+	 	})
+
+	 	frm.set_query("building", function(){
+	 		return {
+	 			"filters": {
+	 				"facility": frm.doc.facility
+	 			}
+	 		};
+	 	})
+	 	if(cur_frm.doc.booking=="search")
+		{
+			cur_frm.set_df_property("check_availability","hidden",1);
+		}
+
 	},
 	refresh: function(frm) {
 		//cur_frm.set_value("date1",cur_frm.doc.date);
@@ -76,12 +103,25 @@ frappe.ui.form.on('Conference booking', {
 				callback: function(r) {
 						User_details=r.message;
 						if(frm.doc.email==User_details.name && (frm.doc.city!=User_details.city && frm.doc.facility!=User_details.facility))
-						{
+						{	console.log("==tt");
 							console.log("Changed value");
 							cur_frm.set_value("location",User_details.location);
 							console.log("c",frm.doc.city)
 							console.log("a",frm.doc.area)
 							console.log("f",frm.doc.facility)
+							/*cur_frm.set_df_property("conference","read_only",cur_frm.doc.__islocal);
+							cur_frm.set_df_property("area","read_only",cur_frm.doc.__islocal);
+							cur_frm.set_df_property("city","read_only",cur_frm.doc.__islocal);
+							cur_frm.set_df_property("facility","read_only",cur_frm.doc.__islocal);
+							cur_frm.set_df_property("building","read_only",cur_frm.doc.__islocal);
+							cur_frm.set_df_property("location","read_only",cur_frm.doc.__islocal);
+							cur_frm.set_df_property("date","read_only",cur_frm.doc.__islocal);
+							cur_frm.set_df_property("from_time","read_only",cur_frm.doc.__islocal);
+							cur_frm.set_df_property("to_time","read_only",cur_frm.doc.__islocal);*/
+							/*cur_frm.set_df_property("attendees","read_only",cur_frm.doc.__islocal);
+							cur_frm.set_df_property("send_invite","read_only",cur_frm.doc.__islocal);
+							cur_frm.set_df_property("agenda","read_only",cur_frm.doc.__islocal);
+							cur_frm.set_df_property("pantry_service","read_only",cur_frm.doc.__islocal);*/
 
 							if(frm.doc.city==undefined && frm.doc.area==undefined && frm.doc.facility==undefined){
 								console.log("IIFIF")
@@ -91,6 +131,8 @@ frappe.ui.form.on('Conference booking', {
 								cur_frm.set_value("facility",User_details.facility);
 								cur_frm.set_value("building",User_details.floor);
 								cur_frm.set_value("bay",User_details.bay);
+
+
 							}
 
 						}
@@ -98,6 +140,23 @@ frappe.ui.form.on('Conference booking', {
 						{
 							console.log("unchanged");
 							cur_frm.set_value("location",User_details.location);
+							if(cur_frm.doc.booking=="search")
+							{
+								cur_frm.set_df_property("conference","read_only",cur_frm.doc.__islocal);
+								cur_frm.set_df_property("area","read_only",cur_frm.doc.__islocal);
+								cur_frm.set_df_property("city","read_only",cur_frm.doc.__islocal);
+								cur_frm.set_df_property("facility","read_only",cur_frm.doc.__islocal);
+								cur_frm.set_df_property("building","read_only",cur_frm.doc.__islocal);
+								cur_frm.set_df_property("location","read_only",cur_frm.doc.__islocal);
+								cur_frm.set_df_property("date","read_only",cur_frm.doc.__islocal);
+								cur_frm.set_df_property("from_time","read_only",cur_frm.doc.__islocal);
+								cur_frm.set_df_property("to_time","read_only",cur_frm.doc.__islocal);
+							}
+
+							//cur_frm.set_df_property("attendees","read_only",cur_frm.doc.__islocal);
+							//cur_frm.set_df_property("send_invite","read_only",cur_frm.doc.__islocal);
+							//cur_frm.set_df_property("agenda","read_only",cur_frm.doc.__islocal);
+							//cur_frm.set_df_property("pantry_service","read_only",cur_frm.doc.__islocal);
 						}	
 								
 				}
@@ -154,6 +213,12 @@ frappe.ui.form.on('Conference booking', {
 					cur_frm.set_value("availability",r.message);
 				}
 			});
+	},
+	booking:function(frm){
+		if(cur_frm.doc.booking=="search")
+		{
+			cur_frm.set_df_property("check_availability","hidden",1);
+		}
 	}
 	// validate:function(frm){
 

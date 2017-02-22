@@ -9,6 +9,21 @@ frappe.pages['search-conferences'].on_page_load = function(wrapper) {
 	wrapper.search = new frappe.Search(wrapper);
 	
 }	
+frappe.pages['search-conferences'].refresh = function(wrapper) {
+	console.log("JBJKJ");
+	var me = this;
+	console.log("me***",me.date,$('[data-fieldname="date"]'));
+	//me.date=" ";
+	$(wrapper).find('[data-fieldname="date"]').val("")
+	$(wrapper).find('[data-fieldname="from_time"]').val("")
+	$(wrapper).find('[data-fieldname="to_time"]').val("")	
+	$(wrapper).find('[data-fieldname="attendees"]').val("")
+	$('#tbody').html("");
+    /*me.from_time=" ";
+    me.to_time=" ";
+    me.attendees=" ";
+*/
+}
 
 frappe.Search = Class.extend({
 
@@ -24,10 +39,10 @@ frappe.Search = Class.extend({
 		me.setup_page();
 		///me.get_facility();
 		me.get_values();
-		me.refresh();
+		//me.refresh();
 	},
 
-	refresh: function(){
+	/*refresh: function(){
 	var me = this;
 	console.log("me",me);
 		me.date.value=" ";
@@ -38,7 +53,7 @@ frappe.Search = Class.extend({
             //me.area.input.value=" ";
             //me.from_time.input.value=" ";
             $('#tbody').html("");
-	},
+	},*/
 	setup_page: function() {
 		var me = this;
 		me.date = frappe.ui.form.make_control({
@@ -233,14 +248,14 @@ parseInt
 			}
     	});
 
-   //  	$("#from_time").change(function(){
-   //  		var sd=Date.parse(me.date.value+' '+me.from_time.input.value);
-			// var ed=Date.parse(me.date.value+' '+me.to_time.input.value);
-			// if(ed<sd)
-			// {
-			// 	frappe.msgprint("To Time Must Be Greater Than From Time");
-			// }
-   //  	});
+   		/*$("#from_time").change(function(){
+    		var sd=Date.parse(me.date.value+' '+me.from_time.input.value);
+			var ed=Date.parse(me.date.value+' '+me.to_time.input.value);
+			if(ed<=sd)
+			{
+				frappe.msgprint("To Time Must Be Greater Than From Time");
+			}
+    	});*/
 
 		$('#btn-cancel').click(function(){
             me.date.input.value=" ";
@@ -287,6 +302,26 @@ parseInt
 			if(!me.attendees.value)
 			{
 				frappe.msgprint("Please enter No.of Attendees")
+				validate_flag=0
+			}
+			if(!me.area.input.value)
+			{
+				frappe.msgprint("Please enter Area")
+				validate_flag=0
+			}
+			if(!me.city.input.value)
+			{
+				frappe.msgprint("Please enter City")
+				validate_flag=0
+			}
+			if(!me.facility.input.value)
+			{
+				frappe.msgprint("Please enter Facility")
+				validate_flag=0
+			}
+			if(!me.building.input.value)
+			{
+				frappe.msgprint("Please enter Building")
 				validate_flag=0
 			}
 			
@@ -436,6 +471,7 @@ parseInt
 							locals['Conference booking'][tn].building = me.building.input.value;
 							locals['Conference booking'][tn].bay = selected_bay;
 							locals['Conference booking'][tn].conference=$(But_me).attr('id');
+							locals['Conference booking'][tn].booking = "search";
 							frappe.set_route('Form', 'Conference booking', tn);
 							//frappe.route_options('Form', 'Conference booking',{'date':d,'from_time':ftime,'to_time':ttime});
 							// frappe.set_route('Form', 'Conference booking',{'date':d,'from_time':ftime,'to_time':ttime});

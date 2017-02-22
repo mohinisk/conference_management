@@ -181,7 +181,7 @@ def conference_close():
 		conf_datetime1 = frappe.utils.data.get_datetime(conf_datetime)
 		current_datetime = frappe.utils.data.now_datetime()
 		diff=frappe.utils.data.date_diff(current_datetime,conf_datetime1)
-		if diff > 0:
+		if diff >= 0:
 			print "\n\n conf time greater than current time",Book_conf[i]['name']
 			close_conf=frappe.db.sql("""update `tabConference booking` set workflow_state='Closed' where name=%s""",(Book_conf[i]['name']))
 			print close_conf
