@@ -258,11 +258,11 @@ parseInt
     	});*/
 
 		$('#btn-cancel').click(function(){
-            me.date.input.value=" ";
-            me.from_time.input.value=" ";
-            me.from_time.input.value=" ";
-            me.to_time.input.value=" ";
-            me.attendees.input.value=" ";
+            me.date.input.value="";
+            me.from_time.input.value="";
+            me.from_time.input.value="";
+            me.to_time.input.value="";
+            me.attendees.input.value="";
             //me.area.input.value=" ";
             //me.from_time.input.value=" ";
             $('#tbody').html("");
@@ -284,9 +284,9 @@ parseInt
 
 		}
 			var validate_flag=1;
-			if(!me.date.value)
+			if(!me.date.input.value)
 			{
-				frappe.msgprint("Plase Enter Date")
+				frappe.msgprint("Please Enter Date")
 				validate_flag=0
 			}
 			if(!me.from_time.input.value)
@@ -299,7 +299,7 @@ parseInt
 				frappe.msgprint("Please enter To Time")
 				validate_flag=0
 			}
-			if(!me.attendees.value)
+			if(!me.attendees.input.value)
 			{
 				frappe.msgprint("Please enter No.of Attendees")
 				validate_flag=0

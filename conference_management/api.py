@@ -1,6 +1,6 @@
 import frappe
 
-#send_email for conference invitation
+#send_emails to attendees for conference invitation
 @frappe.whitelist()
 def send_invitation_emails(Name,Attendee,Agenda,Venue):
 	print "_________________mailing____________"
@@ -15,6 +15,18 @@ def send_invitation_emails(Name,Attendee,Agenda,Venue):
 	)
 	print "_________________mail_ sent____________"	
 	
+#send_emails to creater for conference confirmation
+@frappe.whitelist()
+def send_confirmation_emails(Name,Agenda,Venue,email):
+	print "_________________mailing____________"
+	msg = frappe.render_template("templates/email/conference_confirmation.html", {"Name":Name,"Agenda": Agenda,"Venue": Venue,"email": email})	
+	frappe.sendmail(
+		recipients=email,
+		sender=frappe.session.user,
+		subject="Conference Confirmation",
+		message=msg
+	)
+	print "_________________mail_ sent__to creator__________"	
 # For displaying conferences on calendar
 @frappe.whitelist()
 def get_conference(start,end,filters=None):
