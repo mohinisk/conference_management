@@ -42,7 +42,7 @@ class Conferencebooking(Document):
 
 		# var validate_flag=1;
 		# if not self.check_availability.
-		#self.save()
+		
 				
 			# if self.from_time > self.to_time:
 			# 	frappe.msgprint("From Time Must Be Smaller Than To Time")
@@ -208,35 +208,43 @@ def check_availability(date,from_time,to_time,conference):
 
 		# conff=frappe.get_all("Conference booking",filters=[['Conference booking','to_time','>',from_time],['Conference booking','date','=',date],['Conference booking','conference','=',conference]],debug=1)
 		# print "*&*& booked conferences",conff
+		# print "\n\nconference name",conference
 		# flag = 0;
-		# ft = frappe.utils.data.get_time(from_time)
-		# conf_datetime = str(date)+" "+str(from_time)
-		# conf_datetime1 = frappe.utils.data.get_datetime(conf_datetime)
+		# if not conff:
+		# 	flag = 1
 		# for i in range(0,len(conff)):
 		# 	conff_details = frappe.get_doc("Conference booking",conff[i]['name'])
-		# 	tt = frappe.utils.data.get_time(conff_details.to_time)
-		# 	conf_dt = str(conff_details.date)+" "+str(conff_details.to_time)
-		# 	conf_d1 = frappe.utils.data.get_datetime(conf_dt)
-		
-		# 	print "\n FromTime",conf_datetime1		
-		# 	print "\nToTime",conf_d1
-		# 	diff=frappe.utils.data.time_diff(conf_datetime1,conf_d1)
-		# 	time_diff=frappe.utils.data.get_time(diff)
-		# 	print "diffff",time_diff
-		# 	print "hour",time_diff.hour
+		# 	Conf_tt=frappe.utils.data.get_time(conff_details.to_time)
+		# 	ft = frappe.utils.data.get_time(from_time)
+		# 	print "\n",Conf_tt
+		# 	print "\n",ft
+		# 	print type(Conf_tt)
+		# 	print type(ft)
+		# 	c_dt= str(date)+" "+str(ft)
+		# 	current_datetime = frappe.utils.data.get_datetime(c_dt)
+		# 	conf_dt = str(conff_details.date)+" "+str(Conf_tt)
+		# 	conf_datetime = frappe.utils.data.get_datetime(conf_dt)
+		# 	diff=frappe.utils.data.time_diff_in_hours(current_datetime,conf_datetime)
+		# 	print "diff",diff
+		# 	print "type of diff",type(diff)
+			
+		# 	if diff < 0:
+		# 		print "diff in if=",diff
+		# 		print "\n\n name=",conff_details.name
+		# 		print "Not Available"
+		# 		flag = 0
+		# 	else:
+		# 		print "diff in else=",diff
+		# 		print "\n\n name=",conff_details.name
+		# 		print "Available"
+		# 		flag = 1
 
-
-
-			# if diff > 0:
-			# 	print "diff in if=",diff
-			# 	print "\n\n name=",conff_details.name
-			# 	print "Not Available"
-			# 	flag = 0
-			# else:
-			# 	print "diff in else=",diff
-			# 	print "\n\n name=",conff_details.name
-			# 	print "Available"
-			# 	flag = 1
+		# if flag==1:
+		# 	print "---","Available"
+		# 	return "Available"
+		# else:
+		# 	print "---","Not Available"
+		# 	return "Not Available"
 
 
 

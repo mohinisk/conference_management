@@ -227,7 +227,7 @@ frappe.ui.form.on('Conference booking', {
 		console.log("checkkkkk",check);
 		if(check==1)
 		{
-			frappe.throw("Please fisrt check availability");
+			frappe.throw("Please first check availability");
 		}
 	}
 
